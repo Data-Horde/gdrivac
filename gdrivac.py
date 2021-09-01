@@ -1,3 +1,4 @@
+#TODO: REQUIREMENTS FILE
 import requests, argparse
 
 def immunize(URL,cookie_payload):
@@ -12,7 +13,7 @@ def immunize(URL,cookie_payload):
 	#print(r.text)
 	#TODO CHECK IF non-200 status
 
-if __name__ == '__main__':
+def main():
 	parser = argparse.ArgumentParser(description="I NEED A DESCRIPTION")
 	#TODO: ADD A DESCRIPTION
 	
@@ -32,3 +33,6 @@ if __name__ == '__main__':
 	cookie_payload = {'SID':(args.sid or ""), 'SSID':(args.ssid or ""), 'HSID':(args.hsid or "")}
 	#print (cookie_payload)
 	immunize(URL,cookie_payload)
+
+if __name__ == '__main__':
+	main()
