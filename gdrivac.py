@@ -1,7 +1,8 @@
 #TODO: REQUIREMENTS FILE
-import requests, argparse
+import requests, argparse, os, json
 
 def immunize(URL,cookie_payload):
+	#TODO: CHECK IF LINK using requests.exceptions.MissingSchema
 	#TODO: CHECK IF GOOGLE DRIVE LINK
 	#TODO: CHECK PAYLOAD
 	
@@ -14,6 +15,9 @@ def immunize(URL,cookie_payload):
 	#TODO CHECK IF non-200 status
 
 def main():
+
+	#CONSTANTS
+	COOKIEFILE = 'cookies.json'
 
 	#PARSE ARGUMENTS
 
@@ -32,27 +36,39 @@ def main():
 	#UNPARSE
 
 	URL = (args.url or "")
-	newCookieSID = (args.sid or "")
-	newCookieSSID = (args.ssid or "")
-	newCookieHSID = (args.hsid or "")
+	#newCookies = (args.sid, args.ssid, args.hsid)
 
-	#TODO: Check for SESSION COOKIES file cookies.json
+	#COOKIE PAYLOAD
+	if not os.path.exists(COOKIEFILE):
+		with open(COOKIEFILE, 'w') as f:
+			f.write('{}')
+	
+	#Read Cookies
+	cookie_payload = {}
+	try:
+		with open(COOKIEFILE, 'r') as cookiefile:
+			cookie_payload = json.load(cookiefile)
+	except:
+		print("{} is corrupted, resetting cookie payload".format(COOKIEFILE))
 
-	#TODO: If not found make one
-
-	#TODO: If cookies specified in function call arguments, overwrite
+	#Update Session Cookies
+	if args.sid: cookie_payload['SID'] = args.sid
+	if args.ssid: cookie_payload['SSID'] = args.ssid
+	if args.hsid: cookie_payload['HSID'] = args.hsid
 
 	#TODO: Check and ask interactively for MISSING user session cookies
+	if not cookie_payload.get('SID'): print('uh oh SID is missing')
+	if not cookie_payload.get('SSID'): print('uh oh SSID is missing')
+	if not cookie_payload.get('HSID'): print('uh oh HSID is missing')
 
 	#TODO: Save cookies file
 
-	#TODO: INIT COOKIE PAYLOAD
-
 	#print(args.sid, args.ssid, args.hsid)
-	cookie_payload = {'SID':newCookieSID, 'SSID':newCookieSSID, 'HSID':newCookieHSID}
+	#cookie_payload = {'SID':newCookieSID, 'SSID':newCookieSSID, 'HSID':newCookieHSID}
 	#print (cookie_payload)
 
 	#GET IMMUNIZED
+	
 	immunize(URL,cookie_payload)
 
 if __name__ == '__main__':
