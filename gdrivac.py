@@ -19,26 +19,29 @@ TODO: EXPLAIN THIS PART""")
 		self.cookieInfoMessage()
 		inp = input("Please enter the value for your "+s+" session cookie:")
 		#TODO: Check for cookies shape using CookieChecker
+		print(inp)
 		return inp
 
-def immunize(URL,cookie_payload):
-	#TODO: CHECK IF LINK using requests.exceptions.MissingSchema
-	#TODO: CHECK IF GOOGLE DRIVE LINK
-	#TODO: CHECK PAYLOAD
-	
-	#URL = "https://docs.google.com/document/d/12pOhaaFh998B0kyc5Sm4IhlhIp1c9t5gDNTVVPaiJgI"
-	r = requests.get(URL,cookies=cookie_payload)
+class Immmunizer:
+	def immunize(self,URL,cookie_payload):
+		#TODO: CHECK IF LINK using requests.exceptions.MissingSchema
+		#TODO: CHECK IF GOOGLE DRIVE LINK
+		#TODO: CHECK PAYLOAD
 
-	print("Status for URL {}:".format(URL))
-	print(r.status_code)
-	#print(r.text)
-	#TODO CHECK IF non-200 status
+		#URL = "https://docs.google.com/document/d/12pOhaaFh998B0kyc5Sm4IhlhIp1c9t5gDNTVVPaiJgI"
+		r = requests.get(URL,cookies=cookie_payload)
+
+		print("Status for URL {}:".format(URL))
+		print(r.status_code)
+		#print(r.text)
+		#TODO CHECK IF non-200 status
 
 def main():
 
 	#CONSTANTS
 	COOKIEFILE = 'cookies.json'
 	IA = InteractiveAsker()
+	IM = Immmunizer()
 
 	#PARSE ARGUMENTS
 
@@ -78,9 +81,9 @@ def main():
 	if args.hsid: cookie_payload['HSID'] = args.hsid
 
 	#Check and ask interactively for MISSING user session cookies
-	if not cookie_payload.get('SID'): args.sid = IA.askFor('SID')
-	if not cookie_payload.get('SSID'): args.ssid =  IA.askFor('SSID')
-	if not cookie_payload.get('HSID'): args.hsid =  IA.askFor('HSID')
+	if not cookie_payload.get('SID'): cookie_payload['SID']= IA.askFor('SID')
+	if not cookie_payload.get('SSID'): cookie_payload['SSID'] =  IA.askFor('SSID')
+	if not cookie_payload.get('HSID'): cookie_payload['HSID'] =  IA.askFor('HSID')
 
 	#TODO: Check for cookies shape using CookieChecker
 
@@ -93,7 +96,7 @@ def main():
 
 	#GET IMMUNIZED
 
-	immunize(URL,cookie_payload)
+	IM.immunize(URL,cookie_payload)
 
 if __name__ == '__main__':
 	main()
