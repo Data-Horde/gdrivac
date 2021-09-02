@@ -1,6 +1,26 @@
 #TODO: REQUIREMENTS FILE
 import requests, argparse, os, json
 
+#Singleton Class for checking cookie shapes
+#TODO: Write functions to check different cookie shapes
+class CookieChecker:
+	pass
+
+#Singleton Class for asking for input
+class InteractiveAsker:
+	cookieInfoShown = False
+	def cookieInfoMessage(self):
+		if not self.cookieInfoShown:
+			print("""Welcome to G-Drivac, the vaccine that protects your Google Drive account!\n
+To continue, please add your session cookies.
+TODO: EXPLAIN THIS PART""")
+			self.cookieInfoShown = True
+	def askFor(self,s):
+		self.cookieInfoMessage()
+		inp = input("Please enter the value for your "+s+" session cookie:")
+		#TODO: Check for cookies shape using CookieChecker
+		return inp
+
 def immunize(URL,cookie_payload):
 	#TODO: CHECK IF LINK using requests.exceptions.MissingSchema
 	#TODO: CHECK IF GOOGLE DRIVE LINK
@@ -18,6 +38,7 @@ def main():
 
 	#CONSTANTS
 	COOKIEFILE = 'cookies.json'
+	IA = InteractiveAsker()
 
 	#PARSE ARGUMENTS
 
@@ -40,8 +61,8 @@ def main():
 
 	#COOKIE PAYLOAD
 	if not os.path.exists(COOKIEFILE):
-		with open(COOKIEFILE, 'w') as f:
-			f.write('{}')
+		with open(COOKIEFILE, 'w') as cookiefile:
+			cookiefile.write('{}')
 	
 	#Read Cookies
 	cookie_payload = {}
@@ -56,19 +77,22 @@ def main():
 	if args.ssid: cookie_payload['SSID'] = args.ssid
 	if args.hsid: cookie_payload['HSID'] = args.hsid
 
-	#TODO: Check and ask interactively for MISSING user session cookies
-	if not cookie_payload.get('SID'): print('uh oh SID is missing')
-	if not cookie_payload.get('SSID'): print('uh oh SSID is missing')
-	if not cookie_payload.get('HSID'): print('uh oh HSID is missing')
+	#Check and ask interactively for MISSING user session cookies
+	if not cookie_payload.get('SID'): args.sid = IA.askFor('SID')
+	if not cookie_payload.get('SSID'): args.ssid =  IA.askFor('SSID')
+	if not cookie_payload.get('HSID'): args.hsid =  IA.askFor('HSID')
 
-	#TODO: Save cookies file
+	#TODO: Check for cookies shape using CookieChecker
+
+	#Save cookies file
+	with open(COOKIEFILE, "w") as cookiefile:
+		json.dump(cookie_payload, cookiefile)
 
 	#print(args.sid, args.ssid, args.hsid)
-	#cookie_payload = {'SID':newCookieSID, 'SSID':newCookieSSID, 'HSID':newCookieHSID}
 	#print (cookie_payload)
 
 	#GET IMMUNIZED
-	
+
 	immunize(URL,cookie_payload)
 
 if __name__ == '__main__':
