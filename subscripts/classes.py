@@ -21,18 +21,27 @@ TODO: EXPLAIN THIS PART""")
 		#TODO: Check for cookies shape using CookieChecker
 		print(inp)
 		return inp
-		
+
 #Immunization Routines
 class Immmunizer:
+
+	#TODO IMMUNIZATION QUEUE
+
 	def immunize(self,URL,cookie_payload):
-		#TODO: CHECK IF LINK using requests.exceptions.MissingSchema
-		#TODO: CHECK IF GOOGLE DRIVE LINK
-		#TODO: CHECK PAYLOAD
 
-		#URL = "https://docs.google.com/document/d/12pOhaaFh998B0kyc5Sm4IhlhIp1c9t5gDNTVVPaiJgI"
-		r = requests.get(URL,cookies=cookie_payload)
+		try:
+			#TODO: CHECK IF GOOGLE DRIVE LINK
+			#TODO: CHECK PAYLOAD
 
-		print("Status for URL {}:".format(URL))
-		print(r.status_code)
-		#print(r.text)
-		#TODO CHECK IF non-200 status
+			#URL = "https://docs.google.com/document/d/12pOhaaFh998B0kyc5Sm4IhlhIp1c9t5gDNTVVPaiJgI"
+			r = requests.get(URL,cookies=cookie_payload)
+
+			print("Status for URL {}:".format(URL))
+			print(r.status_code)
+			#print(r.text)
+			#TODO CHECK IF non-200 status
+		#CHECK IF LINK using requests.exceptions.MissingSchema
+		except requests.exceptions.MissingSchema:
+			print("ERROR: '{}' is not a properly formatted URL!".format(URL))
+		except Exception as e:
+			print("ERROR: {}".format(e))

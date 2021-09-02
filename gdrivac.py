@@ -2,7 +2,7 @@
 import requests, argparse, os, json
 
 #Internal Imports
-from subscripts.classes import * 
+from subscripts.classes import *
 
 def main():
 	#CONSTANTS
