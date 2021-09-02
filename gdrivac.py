@@ -4,16 +4,11 @@ import requests, argparse, os, json
 #Internal Imports
 from subscripts.classes import * 
 
-print(InteractiveAsker)
-
 def main():
 	#CONSTANTS
 	COOKIEFILE = 'cookies.json'
 	IA = InteractiveAsker()
 	IM = Immmunizer()
-
-	#UNUSED FOR NOW
-	#TODO: USE THIS FOR CHECKING COOKIE SHAPES!
 	CC = CookieChecker()
 
 	#PARSE ARGUMENTS
@@ -58,7 +53,8 @@ def main():
 	if not cookie_payload.get('SSID'): cookie_payload['SSID'] =  IA.askFor('SSID')
 	if not cookie_payload.get('HSID'): cookie_payload['HSID'] =  IA.askFor('HSID')
 
-	#TODO: Check for cookies shape using CookieChecker
+	#TODO: Check for cookies shape using CookieChecker CC
+	#CC.()
 
 	#Save cookies file
 	with open(COOKIEFILE, "w") as cookiefile:

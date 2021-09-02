@@ -1,3 +1,5 @@
+#CLASSES!
+
 #Singleton Class for checking cookie shapes
 #TODO: Write functions to check different cookie shapes
 class CookieChecker:
@@ -19,7 +21,8 @@ TODO: EXPLAIN THIS PART""")
 		#TODO: Check for cookies shape using CookieChecker
 		print(inp)
 		return inp
-
+		
+#Immunization Routines
 class Immmunizer:
 	def immunize(self,URL,cookie_payload):
 		#TODO: CHECK IF LINK using requests.exceptions.MissingSchema
