@@ -64,8 +64,7 @@ def main():
 	#print (cookie_payload)
 
 	#GET IMMUNIZED
-
-	IM.immunize(URL,cookie_payload)
+	IM.request(URL,cookie_payload)
 
 if __name__ == '__main__':
 	main()

@@ -1,10 +1,12 @@
+import requests, argparse, os, json, queue, threading
+
+from subscripts.log import log
 #CLASSES!
 
 #Singleton Class for checking cookie shapes
 #TODO: Write functions to check different cookie shapes
 class CookieChecker:
 	pass
-import requests, argparse, os, json
 
 #Singleton Class for asking for input
 class InteractiveAsker:
@@ -25,23 +27,56 @@ TODO: EXPLAIN THIS PART""")
 #Immunization Routines
 class Immmunizer:
 
-	#TODO IMMUNIZATION QUEUE
+	#IMMUNIZATION QUEUE VARIABLES
+	worker_list = []
+	visit_queue = queue.Queue()
+	print_lock = threading.Lock()
 
-	def immunize(self,URL,cookie_payload):
+	def immunize(self,args,visit_queue, cookie_payload):
+		while True:
+			#GET URL FROM QUEUE
+			try:
+				URL = visit_queue.get(block=0)
+			except queue.Empty:
+				with self.print_lock:
+					log("\033[32mQueue is empty\033[0m")
+				return
 
-		try:
-			#TODO: CHECK IF GOOGLE DRIVE LINK
-			#TODO: CHECK PAYLOAD
+			#URL FROM QUEUE RECEIVED
+			try:
+				#TODO: CHECK IF GOOGLE DRIVE LINK OR ADD A PAREMETER TO IGNORE?
 
-			#URL = "https://docs.google.com/document/d/12pOhaaFh998B0kyc5Sm4IhlhIp1c9t5gDNTVVPaiJgI"
-			r = requests.get(URL,cookies=cookie_payload)
+				#OPTIONAL: CHECK PAYLOAD AGAIN
+				#MIGHT BE NECESSARY IF COOKIES EXPIRE
 
-			print("Status for URL {}:".format(URL))
-			print(r.status_code)
-			#print(r.text)
-			#TODO CHECK IF non-200 status
-		#CHECK IF LINK using requests.exceptions.MissingSchema
-		except requests.exceptions.MissingSchema:
-			print("ERROR: '{}' is not a properly formatted URL!".format(URL))
-		except Exception as e:
-			print("ERROR: {}".format(e))
+				#URL = "https://docs.google.com/document/d/12pOhaaFh998B0kyc5Sm4IhlhIp1c9t5gDNTVVPaiJgI"
+				r = requests.get(URL,cookies=cookie_payload)
+
+				print("Status for URL {}:".format(URL))
+				print(r.status_code)
+				#print(r.text)
+				#TODO: CHECK IF non-200 status
+			#CHECK IF LINK using requests.exceptions.MissingSchema
+			except requests.exceptions.MissingSchema:
+				print("ERROR: '{}' is not a properly formatted URL!".format(URL))
+				#Do NOT add back into the queue
+			except Exception as e:
+				print("ERROR: {}".format(e))
+				#Add back into the queue?
+				self.visit_queue.put(URL)
+
+	def request(self,URL,cookie_payload):
+		#TODO: ADAPT THIS FOR MULTIPLE URLs
+		self.visit_queue.put(URL)
+
+		#TODO: PARAMETERIZE THREAD COUNT
+		THREADCOUNT = 3
+
+		#TODO: PASS ARGS FROM FUNCTION CALL
+		my_args = None
+
+		for i in range(THREADCOUNT): #Launch threads
+			thread = threading.Thread(target=self.immunize, args=(my_args, self.visit_queue, cookie_payload ,))
+			thread.name = i
+			thread.start()
+			self.worker_list.append(thread)
