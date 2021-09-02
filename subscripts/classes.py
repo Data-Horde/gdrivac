@@ -49,21 +49,38 @@ class Immmunizer:
 				#OPTIONAL: CHECK PAYLOAD AGAIN
 				#MIGHT BE NECESSARY IF COOKIES EXPIRE
 
+				#GOOD NEWS: You should NOT need to thread-lock on URL requests
+				#It would be great if I could confirm this
+
 				#URL = "https://docs.google.com/document/d/12pOhaaFh998B0kyc5Sm4IhlhIp1c9t5gDNTVVPaiJgI"
 				r = requests.get(URL,cookies=cookie_payload)
 
-				print("Status for URL {}:".format(URL))
-				print(r.status_code)
+				with self.print_lock:
+					log("\033[93mAccessing {}\nStatus: {}\033[0m".format(URL,r.status_code))
+
 				#print(r.text)
-				#TODO: CHECK IF non-200 status
+				#CHECK IF non-200 status
+				if r.status_code < 200 or r.status_code >= 300:
+					with self.print_lock:
+						log("\033[94mRequeuing...\033[0m")
+					self.visit_queue.put(URL)
 			#CHECK IF LINK using requests.exceptions.MissingSchema
 			except requests.exceptions.MissingSchema:
-				print("ERROR: '{}' is not a properly formatted URL!".format(URL))
+				with self.print_lock:
+					log("\033[91mERROR: '{}' is not a properly formatted URL!\033[0m".format(URL))
 				#Do NOT add back into the queue
+			#CONNECTION DEAD?
+			except requests.exceptions.ConnectionError:
+				with self.print_lock:
+					log("\033[91mERROR: No Connection\n\033[94mRequeuing {}\033[0m".format(URL))
+				self.visit_queue.put(URL)
+				#TODO: ADD A SLEEP HERE?
 			except Exception as e:
-				print("ERROR: {}".format(e))
+				with self.print_lock:
+					log("\033[91mERROR: {}\033[0m".format(e))
 				#Add back into the queue?
 				self.visit_queue.put(URL)
+				#TODO: ADD A SLEEP HERE?
 
 	def request(self,URL,cookie_payload):
 		#TODO: ADAPT THIS FOR MULTIPLE URLs
