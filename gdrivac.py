@@ -16,19 +16,21 @@ def main():
 	parser = argparse.ArgumentParser(description="I NEED A DESCRIPTION")
 	#TODO: ADD A DESCRIPTION
 	
-	parser.add_argument("url",type=str,help="Google Drive URL to immunize against")
+
+	#ALLOW FOR MULTIPLE URLs
+	parser.add_argument("url",nargs='+',type=str,help="Google Drive URL(s) to immunize against. Multiple URLs can be specified in succession.")
 	#TODO: ALLOW FOR FILE INPUT INSTEAD OF URL
 	
 	parser.add_argument("-sid",type=str,help="Specify cookie value for SID")
 	parser.add_argument("-ssid",type=str,help="Specify cookie value for SSID")
 	parser.add_argument("-hsid",type=str,help="Specify cookie value for HSID")
+	parser.add_argument("-tcount",type=int,help="Thread count (recommended = 6)")
 	
 	args = parser.parse_args()
 
 	#UNPARSE
 
-	URL = (args.url or "")
-	#newCookies = (args.sid, args.ssid, args.hsid)
+	URLs = (args.url or [])
 
 	#COOKIE PAYLOAD
 	if not os.path.exists(COOKIEFILE):
@@ -64,7 +66,7 @@ def main():
 	#print (cookie_payload)
 
 	#GET IMMUNIZED
-	IM.request(URL,cookie_payload)
+	IM.request(args,URLs,cookie_payload)
 
 if __name__ == '__main__':
 	main()

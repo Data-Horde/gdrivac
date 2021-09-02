@@ -64,6 +64,11 @@ class Immmunizer:
 					with self.print_lock:
 						log("\033[94mRequeuing...\033[0m")
 					self.visit_queue.put(URL)
+
+				#TODO: WARNING!
+				#ACCESS DENIALS DIRECT TO SIGN-IN PAGE WHICH DOES GIVE STATUS 200
+				#WE NEED A WAY TO DETECT THIS
+
 			#CHECK IF LINK using requests.exceptions.MissingSchema
 			except requests.exceptions.MissingSchema:
 				with self.print_lock:
@@ -82,18 +87,16 @@ class Immmunizer:
 				self.visit_queue.put(URL)
 				#TODO: ADD A SLEEP HERE?
 
-	def request(self,URL,cookie_payload):
-		#TODO: ADAPT THIS FOR MULTIPLE URLs
-		self.visit_queue.put(URL)
+	def request(self,args,URLs,cookie_payload):
 
-		#TODO: PARAMETERIZE THREAD COUNT
-		THREADCOUNT = 3
+		#TODO: Maybe check for duplicates?
+		for URL in URLs:
+			self.visit_queue.put(URL)
 
-		#TODO: PASS ARGS FROM FUNCTION CALL
-		my_args = None
+		THREADCOUNT = args.tcount or 6
 
 		for i in range(THREADCOUNT): #Launch threads
-			thread = threading.Thread(target=self.immunize, args=(my_args, self.visit_queue, cookie_payload ,))
+			thread = threading.Thread(target=self.immunize, args=(args, self.visit_queue, cookie_payload ,))
 			thread.name = i
 			thread.start()
 			self.worker_list.append(thread)
