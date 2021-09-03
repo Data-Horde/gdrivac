@@ -44,8 +44,8 @@ class Immmunizer:
 			return title.get("content") == "Google Docs"
 		return False
 	def askingForAccount(self, HTML):
-		#TODO CHECK FOR https://accounts.google.com/signin/v1/lookup
-		return False
+		#CHECK FOR https://accounts.google.com/signin/v1/lookup
+		return HTML.find("https://accounts.google.com/signin/v1/lookup") != -1
 
 	#Main Function
 	def immunize(self,args,visit_queue, cookie_payload):
