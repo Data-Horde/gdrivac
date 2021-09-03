@@ -4,11 +4,15 @@ import requests, argparse, os, json
 from subscripts.classes import *
 
 def main():
+
 	#CONSTANTS
 	COOKIEFILE = 'cookies.json'
 	IA = InteractiveAsker()
 	IM = Immmunizer()
 	CC = CookieChecker()
+
+	HELLOMESSAGE = "\033[92mWelcome to Google-Drivac!\033[92m"
+	#TODO: ADD RANDOM TIPS FOR THE HELLOMESSAGE
 
 	#PARSE ARGUMENTS
 
@@ -80,6 +84,9 @@ Install requirements with $pip install -r requirements.txt
 
 	#print(args.sid, args.ssid, args.hsid)
 	#print (cookie_payload)
+
+	#SHOW TODAY'S HELLO MESSAGE
+	print(HELLOMESSAGE)
 
 	#GET IMMUNIZED
 	if len(URLs):
