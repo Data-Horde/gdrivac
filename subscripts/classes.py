@@ -3,12 +3,9 @@ import requests, argparse, os, json, queue, threading, bs4
 from subscripts.log import log
 #CLASSES!
 
-class GDRIVAC_Exception(Exception):
-	pass
-class NAGDError(GDRIVAC_Exception):
-	pass
-class DoAError(GDRIVAC_Exception):
-	pass
+class GDRIVAC_Exception(Exception): pass
+class NAGDError(GDRIVAC_Exception): pass
+class DoAError(GDRIVAC_Exception): pass
 
 #Singleton Class for checking cookie shapes
 #TODO: Write functions to check different cookie shapes
@@ -40,8 +37,12 @@ class Immmunizer:
 	print_lock = threading.Lock()
 
 	def isAccessed(self, HTML):
-		#TODO CHECK FOR <meta property="og:site_name" content="Google Docs">
-		return True
+		#CHECK FOR <meta property="og:site_name" content="Google Docs">
+		#print(bs4.BeautifulSoup(HTML,features="lxml").find("meta",  {"property":"og:site_name"})["content"] or False)
+		title = bs4.BeautifulSoup(HTML,features="lxml").find("meta",  {"property":"og:site_name"})
+		if title:
+			return title.get("content") == "Google Docs"
+		return False
 	def askingForAccount(self, HTML):
 		#TODO CHECK FOR https://accounts.google.com/signin/v1/lookup
 		return False
