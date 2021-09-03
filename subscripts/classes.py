@@ -17,9 +17,14 @@ class InteractiveAsker:
 	cookieInfoShown = False
 	def cookieInfoMessage(self):
 		if not self.cookieInfoShown:
-			print("""Welcome to G-Drivac, the vaccine that protects your Google Drive account!\n
-To continue, please add your session cookies.
-TODO: EXPLAIN THIS PART
+			print("""Welcome to G-Drivac, the vaccine that protects your Google Drive account from Link Rot!
+On Sep 13 2021, Google Drive will forcibly private a lot of publically shared URLs, details are available here:
+https://workspaceupdates.googleblog.com/2021/06/drive-file-link-updates.html
+
+To be able to associate your Google account with Drive links, you will need to specify your session cookies.
+Don't worry! These are only stored locally, you won't be exposing your account to anyone.
+
+TODO: EXPLAIN HOW TO CHECK COOKIES
 TODO: EXPLAIN HOW TO EXPORT COOKIES""")
 			self.cookieInfoShown = True
 	def askFor(self,s):
@@ -69,7 +74,7 @@ class Immmunizer:
 				#GOOD NEWS: You should NOT need to thread-lock on URL requests
 				#It would be great if I could confirm this
 
-				r = requests.get(URL,cookies=cookie_payload, headers=self.HEADERS)
+				r = requests.get(URL,stream=True,cookies=cookie_payload, headers=self.HEADERS)
 
 				with self.print_lock: log("\033[93mAccessing {}\nStatus: {}\033[0m".format(URL,r.status_code))
 
@@ -89,7 +94,7 @@ class Immmunizer:
 				elif self.askingForAccount(r.text):
 					raise DoAError("\033[91mERROR: File Access Denied for {}\033[0m".format(URL))
 				else:
-					raise NAGDError("\033[91mERROR: '{}' is not a Google Drive URL!\nTODO: Add parameter to ignore\033[0m".format(URL))
+					raise NAGDError("\033[91mERROR: '{}' is not a Google Drive file URL!\nBUG: folders are not being recognized\nTODO: Add parameter to ignore\033[0m".format(URL))
 
 				#with open('debug.html', 'w') as f: f.write(r.text)
 
