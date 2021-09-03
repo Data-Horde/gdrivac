@@ -7,7 +7,7 @@ Luckily, if you access a shared link before that date, your Google account will 
 
 Install requirements with:
 ```bash
-$pip -r install requirements.txt
+$pip install -r requirements.txt
 ```
 Help:
 ```bash
