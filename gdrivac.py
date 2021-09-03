@@ -32,7 +32,7 @@ def main():
 	#PARSE ARGUMENTS
 
 	parser = argparse.ArgumentParser(description="""Google-Drivac: Vaccinate Against Link Rot!
-On Sep 13 2021, Google Drive will forcibly private a lot of publically shared URLs, details are available here:
+On Sep 13 2021, Google Drive will forcibly private a lot of publicly shared URLs, details are available here:
 https://workspaceupdates.googleblog.com/2021/06/drive-file-link-updates.html
 
 Important Note: Google Docs, Sheets, and Slides files are NOT impacted by this change, see https://support.google.com/a/answer/10685032
