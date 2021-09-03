@@ -113,7 +113,9 @@ class Immmunizer:
 			except requests.exceptions.ConnectionError:
 				with self.print_lock: log("\033[91mERROR: No Connection\n\033[94mRequeuing {}\033[0m".format(URL))
 				self.visit_queue.put(URL)
-				#TODO: ADD A SLEEP HERE?
+				#SLEEP
+				e = threading.Event()
+				e.wait(timeout=0.5) 
 			#If the URL is not a GD link, Not A Google Drive Error
 			except NAGDError as e:
 				with self.print_lock: 
@@ -134,7 +136,9 @@ class Immmunizer:
 				with self.print_lock: log("\033[91mERROR: {}\033[0m".format(e))
 				#Add back into the queue?
 				self.visit_queue.put(URL)
-				#TODO: ADD A SLEEP HERE?
+				#SLEEP
+				e = threading.Event()
+				e.wait(timeout=0.5) 
 
 	def request(self,args,URLs,cookie_payload):
 
