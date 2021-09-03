@@ -1,4 +1,3 @@
-#FINAL TODO: REQUIREMENTS FILE
 import requests, argparse, os, json
 
 #Internal Imports
@@ -20,9 +19,8 @@ https://workspaceupdates.googleblog.com/2021/06/drive-file-link-updates.html
 Luckily, if you access a shared link before that date, your Google account will be able to continue accessing it after the deadline.
 Google-Drivac is a tool to associate a Google account with a list of Google Drive links.
 
-Install requirements with $pip -r install requirements.txt
+Install requirements with $pip install -r requirements.txt
 """)
-	#TODO: ADD A DESCRIPTION
 
 	#ALLOW FOR MULTIPLE URLs
 	parser.add_argument("-url",nargs='+',type=str,help="Google Drive URL(s) to immunize against.\nMultiple URLs can be specified in succession.")
