@@ -78,7 +78,7 @@ class Immmunizer:
 				#WE NEED A WAY TO DETECT THIS
 
 				if self.isAccessed(r.text):
-					with self.print_lock:  log("\033[90m(WIP)Account associated with {}\nStatus: {}\033[0m".format(URL,r.status_code))
+					with self.print_lock:  log("\033[90mAccount associated with {}\nStatus: {}\033[0m".format(URL,r.status_code))
 				elif self.askingForAccount(r.text):
 					raise DoAError("\033[91mERROR: File Access Denied for {}\033[0m".format(URL))
 				else:
