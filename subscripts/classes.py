@@ -53,9 +53,14 @@ class Immmunizer:
 	def isAccessed(self, HTML):
 		#CHECK FOR <meta property="og:site_name" content="Google Docs">
 		#print(bs4.BeautifulSoup(HTML,features="lxml").find("meta",  {"property":"og:site_name"})["content"] or False)
+
+		#FOR FILES
 		title = bs4.BeautifulSoup(HTML,features="lxml").find("meta",  {"property":"og:site_name"})
-		if title:
-			return title.get("content") == "Google Docs"
+		if title and title.get("content") == "Google Docs":
+			return True
+		#FOR FOLDERS
+		return HTML.find('drive_hist_state') != -1
+
 		return False
 	def askingForAccount(self, HTML):
 		#CHECK FOR https://accounts.google.com/signin/v1/lookup
@@ -91,14 +96,14 @@ class Immmunizer:
 				#ACCESS DENIALS DIRECT TO SIGN-IN PAGE WHICH DOES GIVE STATUS 200
 				#WE NEED A WAY TO DETECT THIS
 
+				with open('debug.html', 'w') as f: f.write(r.text)
+
 				if self.isAccessed(r.text):
 					with self.print_lock:  log("\033[90mAccount associated with {}\nStatus: {}\033[0m".format(URL,r.status_code))
 				elif self.askingForAccount(r.text):
 					raise DoAError("\033[91mERROR: File Access Denied for {}\033[0m".format(URL))
-				else:
-					raise NAGDError("\033[91mERROR: '{}' is not a Google Drive file URL!\nBUG: folders are not being recognized\nTODO: Add parameter to ignore\033[0m".format(URL))
-
-				#with open('debug.html', 'w') as f: f.write(r.text)
+				elif not args.ignoreNonDrive:
+					raise NAGDError("\033[91mERROR: '{}' is not a Google Drive file URL!\nPass -ignoreNonDrive flag to ignore\033[0m".format(URL))
 
 			#If the URL is invalid
 			except requests.exceptions.MissingSchema:
@@ -111,8 +116,11 @@ class Immmunizer:
 				#TODO: ADD A SLEEP HERE?
 			#If the URL is not a GD link, Not A Google Drive Error
 			except NAGDError as e:
-				with self.print_lock: log(e)
-				#TODO: DO NOT REQUEUE UNLESS PARAMETER IS PASSED TO IGNORE
+				with self.print_lock: 
+					log(e)
+					if args.ignoreNonDrive:
+						log("\033[94mRequeuing...\033[0m")
+						self.visit_queue.put(URL)
 			#If the URL is not accessible for some reason, Denial of Access Error
 			except DoAError as e:
 				with self.print_lock: 

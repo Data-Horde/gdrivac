@@ -35,7 +35,8 @@ Install requirements with $pip install -r requirements.txt
 	parser.add_argument("-sid",type=str,help="Specify cookie value for SID")
 	parser.add_argument("-ssid",type=str,help="Specify cookie value for SSID")
 	parser.add_argument("-hsid",type=str,help="Specify cookie value for HSID")
-	parser.add_argument("-tcount",type=int,help="Thread count (recommended = 6)")
+	parser.add_argument("-tcount",type=int,help="Thread count (default = 6)")
+	parser.add_argument("-ignoreNonDrive",type=int,default=0,help="Requeue non-Google Drive URLs if a failure occurs. Not recommended unless you are repurposing the script.")
 	
 	args = parser.parse_args()
 
