@@ -13,3 +13,6 @@ Help:
 ```bash
 $python gdrivac.py -h
 ```
+
+### Acknowledgements:
+Pyxia, author of [mf-dl](https://gitgud.io/Pyxia/mf-dl/-/blob/master/mfdl.py), which was a very good reference for gdrivac.
