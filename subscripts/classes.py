@@ -26,8 +26,12 @@ Important Note: Google Docs, Sheets, and Slides files are NOT impacted by this c
 To be able to associate your Google account with Drive links, you will need to specify your session cookies.
 Don't worry! These are only stored locally, you won't be exposing your account to anyone.
 
-TODO: EXPLAIN HOW TO CHECK COOKIES
-TODO: EXPLAIN HOW TO EXPORT COOKIES""")
+You can find your browser cookies in Chrome by going into
+Command Menu > Application > Cookies > https://drive.google...
+
+See the bundled How_To_Train_Your_Cookies.png for reference.
+
+Alternatively, you can export your browser cookies as a cookies.json into the gdrivac directory to skip this step.""")
 			self.cookieInfoShown = True
 	def askFor(self,s):
 		self.cookieInfoMessage()
@@ -142,7 +146,7 @@ class Immmunizer:
 
 	def request(self,args,URLs,cookie_payload):
 
-		#TODO: Maybe check for duplicates?
+		#Maybe check for duplicates?
 		for URL in URLs:
 			self.visit_queue.put(URL)
 

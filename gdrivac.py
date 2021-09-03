@@ -1,7 +1,18 @@
-import requests, argparse, os, json
+try:
+	import requests, argparse, os, json, random, time, datetime
+except:
+	print("Hmm... import error. Did you remember to run\n$pip install -r requirements.txt")
 
 #Internal Imports
 from subscripts.classes import *
+
+def timeRemaining():
+	DEADLINE = datetime.datetime(year=2021,month=9,day=13)
+	if datetime.datetime.now() > DEADLINE:
+		return "ANY MINUTE NOW"
+	else:
+		diff = DEADLINE - datetime.datetime.now()
+		return str(diff.days) + " days, " + str(diff.seconds//3600) + " hours, " + str((diff.seconds%3600)//60) + " minutes"
 
 def main():
 
@@ -11,8 +22,12 @@ def main():
 	IM = Immmunizer()
 	CC = CookieChecker()
 
-	HELLOMESSAGE = "\033[92mWelcome to Google-Drivac!\033[92m"
-	#TODO: ADD RANDOM TIPS FOR THE HELLOMESSAGE
+	HELLOMESSAGE = "\033[93mWelcome to Google-Drivac!\nStarting up...\n\033[90m" + random.choice([
+	"TIP: \033[93mGoogle Docs, Sheets, and Slides files are NOT impacted by the security update\033[90m",
+	"TIP: \033[93mYou can pass multiple .txt files to GDrivac with\n\033[92m$ gdrivac.py -f file1.txt file2.txt\033[90m",
+	"TIP: \033[93mYou can export your browser cookies as cookies.json into the gdrivac folder.\033[90m",
+	"TIP: \033[91mApproximate time remaining until September 13:\n{}\033[90m".format(timeRemaining()),
+	])
 
 	#PARSE ARGUMENTS
 
@@ -88,6 +103,7 @@ Install requirements with $pip install -r requirements.txt
 
 	#SHOW TODAY'S HELLO MESSAGE
 	print(HELLOMESSAGE)
+	time.sleep(5)
 
 	#GET IMMUNIZED
 	if len(URLs):
