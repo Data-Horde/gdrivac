@@ -19,7 +19,8 @@ class InteractiveAsker:
 		if not self.cookieInfoShown:
 			print("""Welcome to G-Drivac, the vaccine that protects your Google Drive account!\n
 To continue, please add your session cookies.
-TODO: EXPLAIN THIS PART""")
+TODO: EXPLAIN THIS PART
+TODO: EXPLAIN HOW TO EXPORT COOKIES""")
 			self.cookieInfoShown = True
 	def askFor(self,s):
 		self.cookieInfoMessage()

@@ -15,11 +15,10 @@ def main():
 
 	parser = argparse.ArgumentParser(description="I NEED A DESCRIPTION")
 	#TODO: ADD A DESCRIPTION
-	
 
 	#ALLOW FOR MULTIPLE URLs
-	parser.add_argument("url",nargs='+',type=str,help="Google Drive URL(s) to immunize against. Multiple URLs can be specified in succession.")
-	#TODO: ALLOW FOR FILE INPUT INSTEAD OF URL
+	parser.add_argument("-url",nargs='+',type=str,help="Google Drive URL(s) to immunize against.\nMultiple URLs can be specified in succession.")
+	parser.add_argument("-files",nargs='+',type=str,help="Files with Drive URL(s) to immunize against.\nMultiple files can be specified in succession.\nSupported Formats: TBA")
 	
 	parser.add_argument("-sid",type=str,help="Specify cookie value for SID")
 	parser.add_argument("-ssid",type=str,help="Specify cookie value for SSID")
@@ -30,7 +29,10 @@ def main():
 
 	#UNPARSE
 
+	files = (args.files or [])
 	URLs = (args.url or [])
+
+	#TODO: READ files into URLs
 
 	#COOKIE PAYLOAD
 	if not os.path.exists(COOKIEFILE):
@@ -66,7 +68,10 @@ def main():
 	#print (cookie_payload)
 
 	#GET IMMUNIZED
-	IM.request(args,URLs,cookie_payload)
+	if len(URLs):
+		IM.request(args,URLs,cookie_payload)
+	else:
+		print("\033[91mNo URLs provided.\nStopped.\033[0m")
 
 if __name__ == '__main__':
 	main()
