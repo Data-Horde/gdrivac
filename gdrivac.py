@@ -1,4 +1,4 @@
-#TODO: REQUIREMENTS FILE
+#FINAL TODO: REQUIREMENTS FILE
 import requests, argparse, os, json
 
 #Internal Imports
@@ -18,7 +18,7 @@ def main():
 
 	#ALLOW FOR MULTIPLE URLs
 	parser.add_argument("-url",nargs='+',type=str,help="Google Drive URL(s) to immunize against.\nMultiple URLs can be specified in succession.")
-	parser.add_argument("-files",nargs='+',type=str,help="Files with Drive URL(s) to immunize against.\nMultiple files can be specified in succession.\nSupported Formats: TBA")
+	parser.add_argument("-files",nargs='+',type=str,help="Files with Drive URL(s) to immunize against.\nMultiple files can be specified in succession.\nSupported Formats:\n*.txt seperated by newlines.TBA")
 	
 	parser.add_argument("-sid",type=str,help="Specify cookie value for SID")
 	parser.add_argument("-ssid",type=str,help="Specify cookie value for SSID")
@@ -32,7 +32,13 @@ def main():
 	files = (args.files or [])
 	URLs = (args.url or [])
 
-	#TODO: READ files into URLs
+	for file in files:
+		if file[-4:] == '.txt':
+			with open(file, 'r') as cookiefile:
+				nextline = cookiefile.readline()
+				while nextline:
+					URLs.append(nextline.strip())
+					nextline = cookiefile.readline()
 
 	#COOKIE PAYLOAD
 	if not os.path.exists(COOKIEFILE):

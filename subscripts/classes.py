@@ -37,6 +37,12 @@ class Immmunizer:
 	visit_queue = queue.Queue()
 	print_lock = threading.Lock()
 
+	#OTHER
+	HEADERS={
+		"User-Agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+	}
+
+
 	def isAccessed(self, HTML):
 		#CHECK FOR <meta property="og:site_name" content="Google Docs">
 		#print(bs4.BeautifulSoup(HTML,features="lxml").find("meta",  {"property":"og:site_name"})["content"] or False)
@@ -63,8 +69,7 @@ class Immmunizer:
 				#GOOD NEWS: You should NOT need to thread-lock on URL requests
 				#It would be great if I could confirm this
 
-				#URL = "https://docs.google.com/document/d/12pOhaaFh998B0kyc5Sm4IhlhIp1c9t5gDNTVVPaiJgI"
-				r = requests.get(URL,cookies=cookie_payload)
+				r = requests.get(URL,cookies=cookie_payload, headers=self.HEADERS)
 
 				with self.print_lock: log("\033[93mAccessing {}\nStatus: {}\033[0m".format(URL,r.status_code))
 
@@ -73,6 +78,7 @@ class Immmunizer:
 				if r.status_code < 200 or r.status_code >= 300:
 					with self.print_lock: log("\033[94mRequeuing...\033[0m")
 					self.visit_queue.put(URL)
+					continue
 
 				#WARNING!
 				#ACCESS DENIALS DIRECT TO SIGN-IN PAGE WHICH DOES GIVE STATUS 200
