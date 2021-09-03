@@ -21,6 +21,8 @@ class InteractiveAsker:
 On Sep 13 2021, Google Drive will forcibly private a lot of publically shared URLs, details are available here:
 https://workspaceupdates.googleblog.com/2021/06/drive-file-link-updates.html
 
+Important Note: Google Docs, Sheets, and Slides files are NOT impacted by this change, see https://support.google.com/a/answer/10685032
+
 To be able to associate your Google account with Drive links, you will need to specify your session cookies.
 Don't worry! These are only stored locally, you won't be exposing your account to anyone.
 
