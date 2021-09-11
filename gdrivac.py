@@ -22,10 +22,11 @@ def main():
 	IM = Immmunizer()
 	CC = CookieChecker()
 
-	HELLOMESSAGE = "\033[93mWelcome to Google-Drivac!\nStarting up...\n\033[90m" + random.choice([
+	HELLOMESSAGE = "\033[93mWelcome to Google-Drivac!\nStarting up...\n\033[90m" + "\033[94mARCHIVE TEAM NEEDS YOU! \nPLEASE VISIT \nhttps://datahorde.org/help-archive-team-archive-public-google-drive-files-before-september-13/\n\033[90m"+random.choice([
 	"TIP: \033[93mGoogle Docs, Sheets, and Slides files are NOT impacted by the security update\033[90m",
 	"TIP: \033[93mYou can pass multiple .txt files to GDrivac with\n\033[92m$ gdrivac.py -f file1.txt file2.txt\033[90m",
 	"TIP: \033[93mYou can export your browser cookies as cookies.json into the gdrivac folder.\033[90m",
+	"TIP: \033[93mResource Keys for links you collect are logged to resourceKeys.log. Neato ain't it?\033[90m",
 	"TIP: \033[91mApproximate time remaining until September 13:\n{}\033[90m".format(timeRemaining()),
 	])
 
