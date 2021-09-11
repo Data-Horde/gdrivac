@@ -98,9 +98,10 @@ class Immmunizer:
 				resourcekey = r.json().get("resourceKey")
 
 				#Save resourceKey to a log file
-				with self.resourcekey_lock:
-					with open("resourceKeys.log", "a") as fl:
-						fl.write(f"{url_id} {resourcekey}\n")
+				if not args.dontCollectKeys:
+					with self.resourcekey_lock:
+						with open("resourceKeys.log", "a") as fl:
+							fl.write(f"{url_id} {resourcekey}\n")
 
 				with self.print_lock: log("\033[93mAccessing {}\nStatus: {}\033[0m".format(URL,r.status_code))
 

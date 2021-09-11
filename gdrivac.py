@@ -54,6 +54,7 @@ Install requirements with $pip install -r requirements.txt
 	parser.add_argument("-apisid",type=str,help="Specify cookie value for APISID")
 	parser.add_argument("-tcount",type=int,help="Thread count (default = 6)")
 	parser.add_argument("-ignoreNonDrive",type=int,default=0,help="Requeue non-Google Drive URLs if a failure occurs. Not recommended unless you are repurposing the script.")
+	parser.add_argument("-dontCollectKeys",type=int,default=0,help="Set to non-zero to disable resource key extraction.")
 	
 	args = parser.parse_args()
 
