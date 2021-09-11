@@ -50,6 +50,8 @@ Install requirements with $pip install -r requirements.txt
 	parser.add_argument("-sid",type=str,help="Specify cookie value for SID")
 	parser.add_argument("-ssid",type=str,help="Specify cookie value for SSID")
 	parser.add_argument("-hsid",type=str,help="Specify cookie value for HSID")
+	parser.add_argument("-sapisid",type=str,help="Specify cookie value for SAPISID")
+	parser.add_argument("-apisid",type=str,help="Specify cookie value for APISID")
 	parser.add_argument("-tcount",type=int,help="Thread count (default = 6)")
 	parser.add_argument("-ignoreNonDrive",type=int,default=0,help="Requeue non-Google Drive URLs if a failure occurs. Not recommended unless you are repurposing the script.")
 	
@@ -85,11 +87,15 @@ Install requirements with $pip install -r requirements.txt
 	if args.sid: cookie_payload['SID'] = args.sid
 	if args.ssid: cookie_payload['SSID'] = args.ssid
 	if args.hsid: cookie_payload['HSID'] = args.hsid
+	if args.hsid: cookie_payload['SAPISID'] = args.sapisid
+	if args.hsid: cookie_payload['APISID'] = args.apisid
 
 	#Check and ask interactively for MISSING user session cookies
 	if not cookie_payload.get('SID'): cookie_payload['SID']= IA.askFor('SID')
 	if not cookie_payload.get('SSID'): cookie_payload['SSID'] =  IA.askFor('SSID')
 	if not cookie_payload.get('HSID'): cookie_payload['HSID'] =  IA.askFor('HSID')
+	if not cookie_payload.get('SAPISID'): cookie_payload['SAPISID'] =  IA.askFor('SAPISID')
+	if not cookie_payload.get('APISID'): cookie_payload['APISID'] =  IA.askFor('APISID')
 
 	#TODO: Check for cookies shape using CookieChecker CC
 	#CC.()

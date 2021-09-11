@@ -1,4 +1,4 @@
-import requests, argparse, os, json, queue, threading, bs4
+import requests, argparse, os, json, queue, threading, bs4, re, hashlib
 
 from subscripts.log import log
 #CLASSES!
@@ -47,25 +47,22 @@ class Immmunizer:
 	worker_list = []
 	visit_queue = queue.Queue()
 	print_lock = threading.Lock()
+	resourcekey_lock = threading.Lock()
 
 	#OTHER
 	HEADERS={
-		"User-Agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+		"User-Agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+		"Origin":"https://drive.google.com"
 	}
 
 
-	def isAccessed(self, HTML):
-		#CHECK FOR <meta property="og:site_name" content="Google Docs">
-		#print(bs4.BeautifulSoup(HTML,features="lxml").find("meta",  {"property":"og:site_name"})["content"] or False)
+	def isAccessed(self, response):
+		#Check if gdrive responded with file/folder id in json
+		try:
+			return json.loads(response).get("id") != None
+		except Exception:
+			return False
 
-		#FOR FILES
-		title = bs4.BeautifulSoup(HTML,features="lxml").find("meta",  {"property":"og:site_name"})
-		if title and title.get("content") == "Google Docs":
-			return True
-		#FOR FOLDERS
-		return HTML.find('drive_hist_state') != -1
-
-		return False
 	def askingForAccount(self, HTML):
 		#CHECK FOR https://accounts.google.com/signin/v1/lookup
 		return HTML.find("https://accounts.google.com/signin/v1/lookup") != -1
@@ -84,8 +81,26 @@ class Immmunizer:
 			try:
 				#GOOD NEWS: You should NOT need to thread-lock on URL requests
 				#It would be great if I could confirm this
+				SAPISIDHASH_tohash = (cookie_payload["SAPISID"] + " " + self.HEADERS["Origin"]).encode("utf-8")
+				SAPISIDHASH = hashlib.sha1(SAPISIDHASH_tohash).digest().hex()
+				self.HEADERS["Authorization"] = "SAPISIDHASH " + SAPISIDHASH
 
-				r = requests.get(URL,stream=True,cookies=cookie_payload, headers=self.HEADERS)
+				#TODO: there might be more types of gdrive links
+				url_id_list = re.findall("id=([a-zA-Z0-9_-]*)|/folders/([a-zA-Z0-9_-]*)|/file/d/([a-zA-Z0-9_-]*)", URL)
+				url_id = None
+				for i in url_id_list[0]:
+					if i:
+						url_id = i
+						break
+				rq_url = f"https://clients6.google.com/drive/v2internal/files/{url_id}?fields=id%2Ckind,resourceKey,lastViewedByMeDate&modifiedDateBehavior=NO_CHANGE&supportsTeamDrives=true&enforceSingleParent=true&key=AIzaSyDVQw45DwoYh632gvsP5vPDqEKvb-Ywnb8"
+
+				r = requests.put(rq_url,stream=True,cookies=cookie_payload, headers=self.HEADERS)
+				resourcekey = r.json().get("resourceKey")
+
+				#Save resourceKey to a log file
+				with self.resourcekey_lock:
+					with open("resourceKeys.log", "a") as fl:
+						fl.write(f"{url_id} {resourcekey}\n")
 
 				with self.print_lock: log("\033[93mAccessing {}\nStatus: {}\033[0m".format(URL,r.status_code))
 
