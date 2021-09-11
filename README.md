@@ -1,4 +1,11 @@
 # Google Drivac
+
+## HELP ARCHIVE TEAM!
+**ARCHIVE TEAM NEEDS YOU!**
+
+Help lend some processing power to crawl/download more Google Drive links.
+For details please see https://datahorde.org/help-archive-team-archive-public-google-drive-files-before-september-13
+
 ## Vaccinate Against Link Rot!
 On Sep 13 2021, Google Drive will forcibly private a lot of publicly shared URLs, details are available here:
 https://workspaceupdates.googleblog.com/2021/06/drive-file-link-updates.html
