@@ -17,4 +17,4 @@ $python gdrivac.py -h
 ```
 
 ### Acknowledgements:
-Pyxia, author of [mf-dl](https://gitgud.io/Pyxia/mf-dl/-/blob/master/mfdl.py), which was a very good reference for gdrivac.
+[Pyxia](https://github.com/Pyxia-Code), author of [mf-dl](https://gitgud.io/Pyxia/mf-dl/-/blob/master/mfdl.py), which was a very good reference for gdrivac.
