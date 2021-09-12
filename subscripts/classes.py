@@ -6,6 +6,7 @@ from subscripts.log import log
 class GDRIVAC_Exception(Exception): pass
 class NAGDError(GDRIVAC_Exception): pass
 class DoAError(GDRIVAC_Exception): pass
+class InvalidURLError(GDRIVAC_Exception): pass
 
 #Singleton Class for checking cookie shapes
 #TODO: Write functions to check different cookie shapes
@@ -85,13 +86,14 @@ class Immmunizer:
 				SAPISIDHASH = hashlib.sha1(SAPISIDHASH_tohash).digest().hex()
 				self.HEADERS["Authorization"] = "SAPISIDHASH " + SAPISIDHASH
 
-				#TODO: there might be more types of gdrive links
-				url_id_list = re.findall("id=([a-zA-Z0-9_-]*)|/folders/([a-zA-Z0-9_-]*)|/file/d/([a-zA-Z0-9_-]*)", URL)
-				url_id = None
-				for i in url_id_list[0]:
-					if i:
-						url_id = i
-						break
+				if match := re.search(r'(/folder/d/|/drive/(mobile/)?folders?/|folderview\?id=)(?P<id>[a-zA-Z0-9\-_]{7,70})', URL):
+					#Folders
+					url_id = f"{match.group('id')}"
+				elif match := re.search(r'(/file/d/|(uc|open|abuse|thumbnail|vt)\?(export=[a-z]+&)?id=)(?P<id>[a-zA-Z0-9\-_]{7,70})', URL):
+					#Files
+					url_id = f"{match.group('id')}"
+				else:
+					raise InvalidURLError
 				rq_url = f"https://clients6.google.com/drive/v2internal/files/{url_id}?fields=id%2Ckind,resourceKey,lastViewedByMeDate&modifiedDateBehavior=NO_CHANGE&supportsTeamDrives=true&enforceSingleParent=true&key=AIzaSyDVQw45DwoYh632gvsP5vPDqEKvb-Ywnb8"
 
 				r = requests.put(rq_url,stream=True,cookies=cookie_payload, headers=self.HEADERS)
@@ -126,7 +128,7 @@ class Immmunizer:
 					raise NAGDError("\033[91mERROR: '{}' is not a Google Drive file URL!\nPass -ignoreNonDrive flag to ignore\033[0m".format(URL))
 
 			#If the URL is invalid
-			except requests.exceptions.MissingSchema:
+			except (requests.exceptions.MissingSchema, InvalidURLError):
 				with self.print_lock: log("\033[91mERROR: '{}' is not a properly formatted URL!\033[0m".format(URL))
 				#Do NOT add back into the queue
 			#If the Connection is DEAD
