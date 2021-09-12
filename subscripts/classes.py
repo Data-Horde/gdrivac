@@ -7,6 +7,7 @@ class GDRIVAC_Exception(Exception): pass
 class NAGDError(GDRIVAC_Exception): pass
 class DoAError(GDRIVAC_Exception): pass
 class InvalidURLError(GDRIVAC_Exception): pass
+class FileUnavailableError(GDRIVAC_Exception): pass
 
 #Singleton Class for checking cookie shapes
 #TODO: Write functions to check different cookie shapes
@@ -110,6 +111,8 @@ class Immmunizer:
 				#print(r.text)
 				#CHECK IF non-200 status
 				if r.status_code < 200 or r.status_code >= 300:
+					if r.status_code in [404, 403]:
+						raise FileUnavailableError
 					with self.print_lock: log("\033[94mRequeuing...\033[0m")
 					self.visit_queue.put(URL)
 					continue
@@ -130,6 +133,10 @@ class Immmunizer:
 			#If the URL is invalid
 			except (requests.exceptions.MissingSchema, InvalidURLError):
 				with self.print_lock: log("\033[91mERROR: '{}' is not a properly formatted URL!\033[0m".format(URL))
+				#Do NOT add back into the queue
+			#If the status is 404 or 403
+			except FileUnavailableError:
+				with self.print_lock: log("\033[91mERROR: '{}' is not available!\033[0m".format(URL))
 				#Do NOT add back into the queue
 			#If the Connection is DEAD
 			except requests.exceptions.ConnectionError:
