@@ -1,5 +1,5 @@
 try:
-	import requests, argparse, os, json, random, time, datetime
+	import requests, argparse, os, json, random, time, datetime, re
 except:
 	print("Hmm... import error. Did you remember to run\n$pip install -r requirements.txt")
 
